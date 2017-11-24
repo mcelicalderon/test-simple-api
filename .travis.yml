@@ -1,5 +1,7 @@
 language: ruby
 rvm:
   - 2.4.2
+before_script:
+  - psql -c 'create database test_api_test;' -U postgres
 script:
   - bundle exec rspec
