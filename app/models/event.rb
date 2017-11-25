@@ -22,7 +22,7 @@ class Event < ApplicationRecord
   end
 
   def duration
-    return unless [end_date, start_date].all? { |date| date.present? }
+    return unless [end_date, start_date].all?(&:present?)
     (end_date - start_date).to_i
   end
 
@@ -39,17 +39,17 @@ class Event < ApplicationRecord
     end
   end
 
-  def as_json(options = { })
+  def as_json(options = {})
     super(options).merge(duration: duration)
   end
 
   private
 
   def start_and_end_present?
-    [self.start_date, self.end_date].all? { |date| date.present? }
+    [self.start_date, self.end_date].all?(&:present?)
   end
 
   def start_and_end_absent?
-    [self.start_date, self.end_date].all? { |date| date.blank? }
+    [self.start_date, self.end_date].all?(&:present?)
   end
 end
