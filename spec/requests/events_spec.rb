@@ -26,6 +26,10 @@ RSpec.describe 'Events API', type: :request do
         expect(parsed_json['id']).to eq(event_id)
       end
 
+      it 'returns the event with the inferred duration' do
+        expect(parsed_json['duration']).to eq(10)
+      end
+
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end

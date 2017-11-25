@@ -18,6 +18,7 @@ class Event < ApplicationRecord
   end
 
   def duration
+    return unless [end_date, start_date].all? { |date| date.present? }
     (end_date - start_date).to_i
   end
 
@@ -31,5 +32,9 @@ class Event < ApplicationRecord
     elsif self.end_date.present?
       self.start_date = self.end_date - duration
     end
+  end
+
+  def as_json(options = { })
+    super(options).merge(duration: duration)
   end
 end
