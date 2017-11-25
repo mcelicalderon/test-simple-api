@@ -25,6 +25,7 @@ class Event < ApplicationRecord
     return if [self.start_date, self.end_date].all? { |date| date.present? }
     return if [self.start_date, self.end_date].all? { |date| date.blank? }
 
+    duration = Integer(duration)
     if self.start_date.present?
       self.end_date = self.start_date + duration
     elsif self.end_date.present?
