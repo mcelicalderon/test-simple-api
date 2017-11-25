@@ -1,9 +1,21 @@
 class Event < ApplicationRecord
-  belongs_to :user
-  belongs_to :location
+  belongs_to :user, optional: true
+  belongs_to :location, optional: true
 
-  validates :start_date, :end_date, :name, :description,
-            :user, :location, presence: true
+  state_machine initial: :draft do
+    state :published do
+      validates :start_date, :end_date, :name, :description,
+                :user, :location, presence: true
+    end
+
+    event :publish do
+      transition draft: :published
+    end
+
+    event :unpublish do
+      transition published: :draft
+    end
+  end
 
   def duration
     (end_date - start_date).to_i

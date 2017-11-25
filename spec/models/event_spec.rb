@@ -4,12 +4,31 @@ RSpec.describe Event, type: :model do
   subject { build(:event, start_date: Date.today, end_date: Date.today + 5) }
 
   describe 'validations' do
-    it { is_expected.to validate_presence_of(:user) }
-    it { is_expected.to validate_presence_of(:start_date) }
-    it { is_expected.to validate_presence_of(:end_date) }
-    it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_presence_of(:description) }
-    it { is_expected.to validate_presence_of(:location) }
+    context 'when event is a draft' do
+      before(:each) do
+        subject.state = 'draft'
+      end
+
+      it { is_expected.not_to validate_presence_of(:user) }
+      it { is_expected.not_to validate_presence_of(:start_date) }
+      it { is_expected.not_to validate_presence_of(:end_date) }
+      it { is_expected.not_to validate_presence_of(:name) }
+      it { is_expected.not_to validate_presence_of(:description) }
+      it { is_expected.not_to validate_presence_of(:location) }
+    end
+
+    context 'when event is published' do
+      before(:each) do
+        subject.state = 'published'
+      end
+
+      it { is_expected.to validate_presence_of(:user) }
+      it { is_expected.to validate_presence_of(:start_date) }
+      it { is_expected.to validate_presence_of(:end_date) }
+      it { is_expected.to validate_presence_of(:name) }
+      it { is_expected.to validate_presence_of(:description) }
+      it { is_expected.to validate_presence_of(:location) }
+    end
   end
 
   describe '#duration' do
