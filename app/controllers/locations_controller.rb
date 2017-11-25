@@ -16,7 +16,7 @@ class LocationsController < ApplicationController
   end
 
   def update
-    @location.update(location_params)
+    @location.update!(location_params)
     head :no_content
   end
 
