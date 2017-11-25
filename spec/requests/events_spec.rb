@@ -12,6 +12,16 @@ RSpec.describe 'Events API', type: :request do
       expect(parsed_json.size).to eq(10)
     end
 
+    it 'excludes items marked as deleted on the DB' do
+      expect(parsed_json.size).to eq(10)
+      Event.find(event_id).remove!
+
+      get '/events'
+
+      expect(parsed_json.size).to eq(9)
+      expect(parsed_json.map { |e| e['id'] }).not_to include(event_id)
+    end
+
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
     end
@@ -160,6 +170,11 @@ RSpec.describe 'Events API', type: :request do
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
+    end
+
+    it 'marks the event as deleted' do
+      event = Event.find(event_id)
+      expect(event).to be_deleted
     end
   end
 end

@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_action :set_event, only: [:show, :update, :destroy, :publish, :unpublish]
 
   def index
-    @events = Event.all
+    @events = Event.without_state(:deleted)
     json_response(@events)
   end
 
@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @event.destroy
+    @event.remove!
     head :no_content
   end
 

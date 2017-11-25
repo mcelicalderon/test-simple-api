@@ -15,6 +15,10 @@ class Event < ApplicationRecord
     event :unpublish do
       transition published: :draft
     end
+
+    event :remove do
+      transition any => :deleted
+    end
   end
 
   def duration
@@ -23,8 +27,9 @@ class Event < ApplicationRecord
   end
 
   def duration=(duration)
-    return if [self.start_date, self.end_date].all? { |date| date.present? }
-    return if [self.start_date, self.end_date].all? { |date| date.blank? }
+    # Behavior could change, depending on what the user wants
+    # duration could override one of the two values if they are both present
+    return if start_and_end_present? || start_and_end_absent?
 
     duration = Integer(duration)
     if self.start_date.present?
@@ -36,5 +41,15 @@ class Event < ApplicationRecord
 
   def as_json(options = { })
     super(options).merge(duration: duration)
+  end
+
+  private
+
+  def start_and_end_present?
+    [self.start_date, self.end_date].all? { |date| date.present? }
+  end
+
+  def start_and_end_absent?
+    [self.start_date, self.end_date].all? { |date| date.blank? }
   end
 end
