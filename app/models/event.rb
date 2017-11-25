@@ -9,11 +9,11 @@ class Event < ApplicationRecord
     end
 
     event :publish do
-      transition draft: :published
+      transition any => :published
     end
 
     event :unpublish do
-      transition published: :draft
+      transition any => :draft
     end
 
     event :remove do
